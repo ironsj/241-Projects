@@ -1,0 +1,48 @@
+#! /bin/bash
+
+
+if test "$#" -eq 0
+then
+	echo "Must provide an argument"
+        exit 1
+else
+	if test ! -d ~/backup
+        then
+            	mkdir ~/backup
+	elif [ "$1" = "-l" -o "$1" = "-c" -o "$1" = "--help" ]
+        then
+		:	
+	fi
+fi
+
+for arg in "$@"
+do
+	if test "$arg" = "-c"
+        then
+        	echo "The number of files and directories: "
+	        ls ~/backup | wc -l
+                echo "Number of bytes: "
+		du -b ~/backup
+	elif test "$arg" = "-l"
+        then
+        	echo "List all the files and directories: "
+		ls ~/backup
+	elif test "$arg" = "--help"
+        then
+            	echo "How to run this script: "
+	    	echo "Following './backup' enter the names of the files and/or directories you wish to copy using whitespace as delimeter. This will copy these to ~/backup"
+	    	echo "Enter -c to see the number of files and bytes in ~/backup"
+	    	echo "Enter -l to see a list of files and directories in ~/backup"
+	    	echo "Enter --help to see how to run the script again"
+        else
+        	if [ -f "$arg" ]
+        	then
+        		cp "$arg" ~/backup
+		elif [ -d "$arg" ]
+		then
+			cp -r "$arg" ~/backup
+        	else
+        		echo "$arg does not exist!"
+        	fi
+	fi
+done
